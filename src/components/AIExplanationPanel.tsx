@@ -15,12 +15,14 @@ interface AIExplanationPanelProps {
   scores: ScoringResults;
   decision: DecisionResult;
   evidence: EvidenceItem[];
+  aiAvailable: boolean;
 }
 
 export function AIExplanationPanel({
   scores,
   decision,
   evidence,
+  aiAvailable,
 }: AIExplanationPanelProps) {
   const [cache, setCache] = useState<Record<string, AIExplanationResult>>({});
   const [result, setResult] = useState<AIExplanationResult | null>(null);
@@ -28,6 +30,15 @@ export function AIExplanationPanel({
   const [isLoading, setIsLoading] = useState(false);
 
   async function generate(mode: AIExplanationMode) {
+    if (!aiAvailable) {
+      setResult({
+        status: "unavailable",
+        message:
+          "AI explanation is unavailable because OPENAI_API_KEY is not configured.",
+      });
+      return;
+    }
+
     const request: AIExplanationRequest = {
       mode,
       scores,
@@ -65,7 +76,7 @@ export function AIExplanationPanel({
           <button
             type="button"
             onClick={() => generate("summary")}
-            disabled={isLoading}
+            disabled={isLoading || !aiAvailable}
           >
             Generate explanation
           </button>
@@ -73,7 +84,7 @@ export function AIExplanationPanel({
             type="button"
             className="ai-explanation__challenge"
             onClick={() => generate("challenge")}
-            disabled={isLoading}
+            disabled={isLoading || !aiAvailable}
           >
             Challenge thesis
           </button>
@@ -83,6 +94,8 @@ export function AIExplanationPanel({
       <div className="ai-explanation__policy" aria-label="AI policy reminders">
         <span>AI-generated explanation</span>
         <span>Not used to calculate scores</span>
+        <span>Not used to calculate decision label</span>
+        <span>Deterministic decision is authoritative</span>
         <span>Not financial advice</span>
       </div>
 
@@ -96,6 +109,11 @@ export function AIExplanationPanel({
           />
         ) : result ? (
           <p className="ai-explanation__error">{result.message}</p>
+        ) : !aiAvailable ? (
+          <p className="ai-explanation__error">
+            AI unavailable: OPENAI_API_KEY is not configured. Scores and the
+            decision remain fully deterministic and available.
+          </p>
         ) : (
           <p className="ai-explanation__empty">
             AI has not been called. The deterministic dashboard remains fully

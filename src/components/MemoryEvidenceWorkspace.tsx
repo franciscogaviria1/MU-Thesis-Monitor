@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { AuditSummaryPanel } from "@/components/AuditSummaryPanel";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { AIExplanationPanel } from "@/components/AIExplanationPanel";
 import { MemoryDataSection } from "@/components/MemoryDataSection";
 import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ScoreCard } from "@/components/ScoreCard";
 import { SectionHeading } from "@/components/SectionHeading";
+import { SystemHealth } from "@/components/SystemHealth";
 import {
   createManualMemoryEntry,
   MANUAL_MEMORY_STORAGE_KEY,
@@ -14,6 +16,10 @@ import {
   parseStoredManualMemoryEntries,
 } from "@/lib/manual-memory/manualMemoryService";
 import { calculateDecision } from "@/lib/decision/decisionEngine";
+import {
+  buildAuditSummary,
+  buildSystemHealth,
+} from "@/lib/audit/auditService";
 import { calculateScores } from "@/lib/scoring/scoringEngine";
 import type { ScoreArea } from "@/types/dashboard";
 import type { EvidenceItem } from "@/types/evidence";
@@ -21,6 +27,8 @@ import type {
   ManualMemoryDataEntry,
   ManualMemoryDataInput,
 } from "@/types/manualMemoryData";
+import type { MarketDataSnapshot } from "@/types/marketData";
+import type { NewsFeedSnapshot } from "@/types/news";
 
 interface MemoryEvidenceWorkspaceProps {
   baseEvidenceItems: EvidenceItem[];
@@ -30,6 +38,9 @@ interface MemoryEvidenceWorkspaceProps {
   evidenceTitle: string;
   evidenceDescription: string;
   calculatedAt: string;
+  marketData: MarketDataSnapshot;
+  news: NewsFeedSnapshot;
+  aiAvailable: boolean;
   children: ReactNode;
 }
 
@@ -41,6 +52,9 @@ export function MemoryEvidenceWorkspace({
   evidenceTitle,
   evidenceDescription,
   calculatedAt,
+  marketData,
+  news,
+  aiAvailable,
   children,
 }: MemoryEvidenceWorkspaceProps) {
   const [entries, setEntries] = useState<ManualMemoryDataEntry[]>([]);
@@ -81,6 +95,39 @@ export function MemoryEvidenceWorkspace({
   const decision = useMemo(
     () => calculateDecision({ scores, evidence: evidenceItems }),
     [evidenceItems, scores],
+  );
+  const audit = useMemo(
+    () =>
+      buildAuditSummary({
+        evidence: evidenceItems,
+        scores,
+        decision,
+        asOf: new Date(calculatedAt),
+      }),
+    [calculatedAt, decision, evidenceItems, scores],
+  );
+  const systemHealth = useMemo(
+    () =>
+      buildSystemHealth({
+        marketData,
+        news,
+        manualEntries: entries,
+        storageAvailable,
+        evidence: evidenceItems,
+        decision,
+        aiAvailable,
+        asOf: new Date(calculatedAt),
+      }),
+    [
+      aiAvailable,
+      calculatedAt,
+      decision,
+      entries,
+      evidenceItems,
+      marketData,
+      news,
+      storageAvailable,
+    ],
   );
 
   function addEntry(input: ManualMemoryDataInput) {
@@ -125,7 +172,11 @@ export function MemoryEvidenceWorkspace({
         scores={scores}
         decision={decision}
         evidence={evidenceItems}
+        aiAvailable={aiAvailable}
       />
+
+      <SystemHealth health={systemHealth} />
+      <AuditSummaryPanel audit={audit} />
 
       {children}
 

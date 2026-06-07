@@ -59,6 +59,9 @@ export default async function Home() {
           evidenceTitle={data.evidenceSectionTitle}
           evidenceDescription={data.evidenceSectionDescription}
           calculatedAt={new Date().toISOString()}
+          marketData={marketData}
+          news={news}
+          aiAvailable={Boolean(process.env.OPENAI_API_KEY?.trim())}
         >
           <ConfidenceCoverage data={data.confidenceCoverage} />
         </MemoryEvidenceWorkspace>

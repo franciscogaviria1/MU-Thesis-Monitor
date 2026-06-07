@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Reliability and Audit Review v1
+
+- **Decision:** Add read-only system-health and audit summaries derived from provider snapshots, normalized evidence, deterministic score metadata, and decision warnings.
+- **Evidence trace:** The audit lists evidence that affected scores by score-reference ID and explains exclusions using current analysis-status, direction, freshness, and category rules.
+- **Operational trace:** Market, news, manual-memory, and AI availability are shown independently with last-successful-update and missing/stale warnings.
+- **Authority boundary:** Audit metadata cannot alter scores or labels; the UI states that AI is optional and the deterministic decision remains authoritative.
+- **Failure behavior:** Unavailable providers, browser storage, or AI credentials remain visible as status warnings without preventing dashboard rendering.
+- **Author:** Codex
+
 ## 2026-06-07: Optional OpenAI Explanation Layer v1
 
 - **Decision:** Add a server-only, user-initiated explanation layer for the existing deterministic scores and decision label.

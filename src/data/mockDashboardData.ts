@@ -232,5 +232,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6G prototype. Three deterministic scores and one deterministic review label use normalized evidence; decision history remains mocked. OpenAI is optional, server-side, and used only for on-demand explanations. No database, paid scraping, authentication, or AI classification is connected.",
+    "Phase 6H prototype. System health and audit traces explain provider status, evidence use, safeguards, and confidence limits. Scores and the review label remain deterministic; OpenAI is optional and explanation-only.",
 };
