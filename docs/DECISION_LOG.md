@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Deterministic Trend Analysis v1
+
+- **Decision:** Compare persisted daily snapshots across selectable 7-, 14-, and 30-day windows without recalculating historical scores or labels.
+- **Direction rules:** Rising Business Thesis Health and Market Sentiment are favorable; rising Valuation Risk is unfavorable; decision labels use an explicit monitoring-posture rank.
+- **Confidence:** Trend confidence is separate from trend direction and reflects endpoint confidence, snapshot coverage, and mixed-signal penalties.
+- **Insufficient history:** Fewer than two distinct daily snapshots returns `insufficient_data`; missing dates are not interpolated and no trend is inferred.
+- **Safety boundary:** Trend analysis is descriptive, deterministic, and read-only. It cannot change scores, confidence values, decision labels, or evidence.
+- **Author:** Codex
+
 ## 2026-06-07: Local SQLite Persistence v1
 
 - **Decision:** Use Node's built-in SQLite support as the primary local persistence provider behind a replaceable interface and server actions.

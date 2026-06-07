@@ -10,7 +10,7 @@ import type {
   PersistenceStatus,
 } from "@/types/persistence";
 
-const HISTORY_LIMIT = 14;
+const HISTORY_LIMIT = 31;
 
 let provider: PersistenceProvider | null = null;
 

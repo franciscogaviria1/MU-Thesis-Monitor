@@ -232,5 +232,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6I prototype. Local SQLite stores manual entries, evidence, deterministic score and decision snapshots, and audit history. localStorage remains a non-destructive migration and fallback path.",
+    "Phase 6J prototype. Deterministic trend analysis compares persisted daily snapshots across 7, 14, and 30 days. No AI, score recalculation, or decision recalculation is used.",
 };

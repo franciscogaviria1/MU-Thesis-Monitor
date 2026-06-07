@@ -10,6 +10,7 @@ import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ScoreCard } from "@/components/ScoreCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SystemHealth } from "@/components/SystemHealth";
+import { TrendSummary } from "@/components/TrendSummary";
 import {
   createManualMemoryEntry,
   MANUAL_MEMORY_STORAGE_KEY,
@@ -275,6 +276,10 @@ export function MemoryEvidenceWorkspace({
 
       <SystemHealth health={systemHealth} />
       <AuditSummaryPanel audit={audit} />
+      <TrendSummary
+        snapshots={decisionHistory}
+        persistenceAvailable={persistenceStatus.available}
+      />
       <DecisionHistory
         snapshots={decisionHistory}
         persistenceAvailable={persistenceStatus.available}
