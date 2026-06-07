@@ -1,7 +1,7 @@
 import { ConfidenceCoverage } from "@/components/ConfidenceCoverage";
 import { DecisionLog } from "@/components/DecisionLog";
-import { EvidencePanel } from "@/components/EvidencePanel";
 import { MarketSnapshot } from "@/components/MarketSnapshot";
+import { MemoryEvidenceWorkspace } from "@/components/MemoryEvidenceWorkspace";
 import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ScoreCard } from "@/components/ScoreCard";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -70,10 +70,10 @@ export default async function Home() {
 
         <RecommendationPanel recommendation={data.recommendation} />
 
-        <EvidencePanel
-          title={data.evidenceSectionTitle}
-          description={data.evidenceSectionDescription}
-          items={evidenceItems}
+        <MemoryEvidenceWorkspace
+          baseEvidenceItems={evidenceItems}
+          evidenceTitle={data.evidenceSectionTitle}
+          evidenceDescription={data.evidenceSectionDescription}
         />
 
         <DecisionLog

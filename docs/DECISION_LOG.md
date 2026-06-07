@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Local Manual Memory Data
+
+- **Decision:** Store structured memory-pricing and HBM observations in browser `localStorage` and convert them into normalized evidence at the client boundary.
+- **Rationale:** Manual entry provides traceable thesis inputs before paid-data automation exists without introducing a database or ingestion dependency.
+- **Affected components:** Manual memory data contract, validation and storage service, dashboard entry form, recent-entry register, and evidence projection.
+- **Safety boundary:** Manual entries remain `not_analyzed`, carry `unknown` impact, affect only Business Thesis Health evidence, and cannot change scores or recommendation labels.
+- **Failure behavior:** Invalid submissions remain unsaved with field errors; unavailable or malformed local storage does not prevent the dashboard from loading.
+- **Author:** Codex
+
 ## 2026-06-07: Unified Evidence Model
 
 - **Decision:** Normalize market data, news, and manual prototype records into one `EvidenceItem` contract before presentation.

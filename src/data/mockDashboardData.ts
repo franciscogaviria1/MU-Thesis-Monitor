@@ -138,7 +138,7 @@ export const mockDashboardData: DashboardData = {
   },
   evidenceSectionTitle: "Evidence register",
   evidenceSectionDescription:
-    "Normalized provider and manual records remain separate from interpretation and scoring.",
+    "Normalized provider and locally entered records remain separate from interpretation and scoring.",
   evidenceItems: [
     {
       id: "evidence-001",
@@ -248,5 +248,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6C prototype. MU market data and raw headlines may be live and are normalized as evidence; scores, recommendations, and decision history remain mocked. No OpenAI, database, authentication, or sentiment scoring is connected.",
+    "Phase 6D prototype. MU market data, raw headlines, and local manual memory observations are normalized as evidence; scores, recommendations, and decision history remain mocked. No OpenAI, database, paid scraping, authentication, or sentiment scoring is connected.",
 };
