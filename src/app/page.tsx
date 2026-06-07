@@ -62,6 +62,7 @@ export default async function Home() {
           marketData={marketData}
           news={news}
           aiAvailable={Boolean(process.env.OPENAI_API_KEY?.trim())}
+          nextEarningsDate={data.nextEarningsDate}
         >
           <ConfidenceCoverage data={data.confidenceCoverage} />
         </MemoryEvidenceWorkspace>

@@ -4,8 +4,10 @@ import {
   importManualMemoryEntries as importEntries,
   loadPersistentDashboardState as loadState,
   persistDailySnapshot,
+  persistEarningsRecord as persistEarnings,
   persistManualMemoryEntry as persistEntry,
 } from "@/lib/persistence/localPersistenceService";
+import type { EarningsRecord } from "@/types/earnings";
 import type { ManualMemoryDataEntry } from "@/types/manualMemoryData";
 import type {
   DailySnapshotInput,
@@ -27,6 +29,12 @@ export async function persistManualMemoryEntry(
   entry: ManualMemoryDataEntry,
 ): Promise<PersistenceStatus> {
   return persistEntry(entry);
+}
+
+export async function persistEarningsRecord(
+  record: EarningsRecord,
+): Promise<PersistenceStatus> {
+  return persistEarnings(record);
 }
 
 export async function persistDailyDashboardSnapshot(

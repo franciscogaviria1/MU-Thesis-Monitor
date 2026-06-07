@@ -1,6 +1,7 @@
 import type { AuditSummary } from "@/types/audit";
 import type { DecisionLabel } from "@/types/dashboard";
 import type { EvidenceItem } from "@/types/evidence";
+import type { EarningsRecord } from "@/types/earnings";
 import type { ManualMemoryDataEntry } from "@/types/manualMemoryData";
 import type { ScoringResults } from "@/types/scoring";
 
@@ -47,5 +48,6 @@ export interface DailySnapshotInput {
 export interface PersistentDashboardState {
   status: PersistenceStatus;
   manualEntries: ManualMemoryDataEntry[];
+  earningsRecords: EarningsRecord[];
   decisionHistory: DailySnapshot[];
 }

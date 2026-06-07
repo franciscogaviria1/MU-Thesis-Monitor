@@ -58,6 +58,7 @@ export interface DecisionLogEntry {
 export interface DashboardData {
   appName: string;
   subtitle: string;
+  nextEarningsDate: string;
   lastUpdatedLabel: string;
   lastUpdated: string;
   disclaimer: string;

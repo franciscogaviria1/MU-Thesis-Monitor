@@ -3,6 +3,7 @@ import type { DashboardData } from "@/types/dashboard";
 export const mockDashboardData: DashboardData = {
   appName: "MU Thesis Monitor",
   subtitle: "Local thesis-monitoring dashboard",
+  nextEarningsDate: "2026-06-24",
   lastUpdatedLabel: "Mock snapshot",
   lastUpdated: "June 6, 2026 at 9:30 AM ET",
   disclaimer: "This is not financial advice.",
@@ -232,5 +233,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6J prototype. Deterministic trend analysis compares persisted daily snapshots across 7, 14, and 30 days. No AI, score recalculation, or decision recalculation is used.",
+    "Phase 6K prototype. Earnings Mode adds deterministic pre-earnings checks, persisted post-earnings inputs, normalized earnings evidence, and a manual review summary without trading instructions.",
 };

@@ -1,4 +1,5 @@
 import type { ManualMemoryDataEntry } from "@/types/manualMemoryData";
+import type { EarningsRecord } from "@/types/earnings";
 import type {
   DailySnapshot,
   DailySnapshotInput,
@@ -10,6 +11,8 @@ export interface PersistenceProvider {
   upsertManualMemoryEntries(
     entries: ManualMemoryDataEntry[],
   ): Promise<void>;
+  getEarningsRecords(): Promise<EarningsRecord[]>;
+  upsertEarningsRecord(record: EarningsRecord): Promise<void>;
   saveDailySnapshot(input: DailySnapshotInput): Promise<DailySnapshot>;
   getDecisionHistory(limit?: number): Promise<DailySnapshot[]>;
 }

@@ -2,9 +2,11 @@ import { mkdirSync } from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { createDailySnapshot } from "@/lib/persistence/snapshotModel";
+import { parseEarningsRecords } from "@/lib/earnings/earningsService";
 import type { PersistenceProvider } from "@/lib/persistence/persistenceProvider";
 import { parseManualMemoryEntries } from "@/lib/manual-memory/manualMemoryService";
 import type { ManualMemoryDataEntry } from "@/types/manualMemoryData";
+import type { EarningsRecord } from "@/types/earnings";
 import type {
   DailySnapshot,
   DailySnapshotInput,
@@ -27,6 +29,13 @@ export class SQLitePersistenceProvider implements PersistenceProvider {
       CREATE TABLE IF NOT EXISTS manual_memory_entries (
         id TEXT PRIMARY KEY,
         observed_at TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        payload_json TEXT NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS earnings_records (
+        id TEXT PRIMARY KEY,
+        earnings_date TEXT NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         payload_json TEXT NOT NULL
@@ -115,6 +124,48 @@ export class SQLitePersistenceProvider implements PersistenceProvider {
         JSON.stringify(entry),
       );
     });
+  }
+
+  async getEarningsRecords(): Promise<EarningsRecord[]> {
+    const rows = this.getDatabase()
+      .prepare(
+        "SELECT payload_json FROM earnings_records ORDER BY earnings_date DESC, created_at DESC",
+      )
+      .all() as unknown as JsonRow[];
+
+    return parseEarningsRecords(
+      rows.flatMap((row) => safelyParseJson(row.payload_json)),
+    );
+  }
+
+  async upsertEarningsRecord(record: EarningsRecord): Promise<void> {
+    const validRecord = parseEarningsRecords([record])[0];
+    if (!validRecord) {
+      throw new Error("Invalid earnings record.");
+    }
+
+    const now = new Date().toISOString();
+    this.getDatabase()
+      .prepare(`
+        INSERT INTO earnings_records (
+          id,
+          earnings_date,
+          created_at,
+          updated_at,
+          payload_json
+        ) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          earnings_date = excluded.earnings_date,
+          updated_at = excluded.updated_at,
+          payload_json = excluded.payload_json
+      `)
+      .run(
+        validRecord.id,
+        validRecord.earningsDate,
+        validRecord.createdAt,
+        now,
+        JSON.stringify(validRecord),
+      );
   }
 
   async saveDailySnapshot(

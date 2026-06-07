@@ -8,6 +8,7 @@ import { createDailySnapshot } from "@/lib/persistence/snapshotModel";
 import { loadPersistentDashboardStateWithProvider } from "@/lib/persistence/localPersistenceService";
 import type { PersistenceProvider } from "@/lib/persistence/persistenceProvider";
 import type { AuditSummary } from "@/types/audit";
+import type { EarningsRecord } from "@/types/earnings";
 import type { EvidenceItem } from "@/types/evidence";
 import type { ManualMemoryDataEntry } from "@/types/manualMemoryData";
 import type { DailySnapshotInput } from "@/types/persistence";
@@ -69,6 +70,17 @@ describe("local persistence", () => {
     provider.close();
   });
 
+  it("persists post-earnings records in SQLite", async () => {
+    const provider = createProvider();
+    const record = earningsRecord();
+
+    await provider.initialize();
+    await provider.upsertEarningsRecord(record);
+
+    expect(await provider.getEarningsRecords()).toEqual([record]);
+    provider.close();
+  });
+
   it("merges localStorage migration entries without deleting persisted data", () => {
     const persisted = memoryEntry("persisted");
     const legacy = memoryEntry("legacy");
@@ -104,6 +116,14 @@ class FailingPersistenceProvider implements PersistenceProvider {
   }
 
   async upsertManualMemoryEntries(): Promise<void> {
+    throw new Error("Synthetic persistence failure");
+  }
+
+  async getEarningsRecords(): Promise<EarningsRecord[]> {
+    throw new Error("Synthetic persistence failure");
+  }
+
+  async upsertEarningsRecord(): Promise<void> {
     throw new Error("Synthetic persistence failure");
   }
 
@@ -210,5 +230,31 @@ function auditSummary(evidence: EvidenceItem): AuditSummary {
     authorityStatements: [
       "The deterministic decision remains the authority.",
     ],
+  };
+}
+
+function earningsRecord(): EarningsRecord {
+  return {
+    id: "earnings-1",
+    createdAt: "2026-06-07T12:00:00.000Z",
+    earningsDate: "2026-06-24",
+    reportedRevenue: "8.5",
+    revenueExpectation: "8.2",
+    reportedEps: "1.80",
+    epsExpectation: "1.60",
+    guidanceDirection: "raised",
+    hbmCommentary: "positive",
+    dramCommentary: "neutral",
+    marginCommentary: "positive",
+    sourceUrl: "https://investors.micron.com/",
+    preEarningsDecision: {
+      label: "Watch",
+      confidence: 49,
+    },
+    preEarningsScores: {
+      businessThesisHealth: { score: 80, confidence: 88 },
+      valuationRisk: { score: 50, confidence: 0 },
+      marketSentiment: { score: 50, confidence: 70 },
+    },
   };
 }

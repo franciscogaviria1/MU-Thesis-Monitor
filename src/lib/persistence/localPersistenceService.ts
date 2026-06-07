@@ -1,8 +1,10 @@
 import { SQLitePersistenceProvider } from "@/lib/persistence/sqlitePersistenceProvider";
 import type { PersistenceProvider } from "@/lib/persistence/persistenceProvider";
 import { parseManualMemoryEntries } from "@/lib/manual-memory/manualMemoryService";
+import { parseEarningsRecords } from "@/lib/earnings/earningsService";
 export { createDailySnapshot } from "@/lib/persistence/snapshotModel";
 import type { ManualMemoryDataEntry } from "@/types/manualMemoryData";
+import type { EarningsRecord } from "@/types/earnings";
 import type {
   DailySnapshot,
   DailySnapshotInput,
@@ -23,18 +25,41 @@ export async function loadPersistentDashboardStateWithProvider(
 ): Promise<PersistentDashboardState> {
   try {
     await activeProvider.initialize();
-    const [manualEntries, decisionHistory] = await Promise.all([
+    const [manualEntries, earningsRecords, decisionHistory] = await Promise.all([
       activeProvider.getManualMemoryEntries(),
+      activeProvider.getEarningsRecords(),
       activeProvider.getDecisionHistory(HISTORY_LIMIT),
     ]);
 
     return {
       status: availableStatus(),
       manualEntries,
+      earningsRecords,
       decisionHistory,
     };
   } catch {
     return unavailableState();
+  }
+}
+
+export async function persistEarningsRecord(
+  record: EarningsRecord,
+): Promise<PersistenceStatus> {
+  const validRecord = parseEarningsRecords([record])[0];
+  if (!validRecord) {
+    return {
+      available: false,
+      message: "The earnings record was invalid and was not persisted.",
+    };
+  }
+
+  try {
+    const activeProvider = getProvider();
+    await activeProvider.initialize();
+    await activeProvider.upsertEarningsRecord(validRecord);
+    return availableStatus("Post-earnings review saved to local SQLite.");
+  } catch {
+    return unavailableStatus();
   }
 }
 
@@ -116,6 +141,7 @@ function unavailableState(): PersistentDashboardState {
   return {
     status: unavailableStatus(),
     manualEntries: [],
+    earningsRecords: [],
     decisionHistory: [],
   };
 }

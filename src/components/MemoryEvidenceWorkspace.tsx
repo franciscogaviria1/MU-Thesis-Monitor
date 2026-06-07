@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { AuditSummaryPanel } from "@/components/AuditSummaryPanel";
 import { DecisionHistory } from "@/components/DecisionHistory";
+import { EarningsMode } from "@/components/EarningsMode";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { AIExplanationPanel } from "@/components/AIExplanationPanel";
 import { MemoryDataSection } from "@/components/MemoryDataSection";
@@ -22,8 +23,13 @@ import {
   importManualMemoryEntries,
   loadPersistentDashboardState,
   persistDailyDashboardSnapshot,
+  persistEarningsRecord,
   persistManualMemoryEntry,
 } from "@/app/actions/persistence";
+import {
+  createEarningsRecord,
+  earningsRecordToEvidence,
+} from "@/lib/earnings/earningsService";
 import { calculateDecision } from "@/lib/decision/decisionEngine";
 import {
   buildAuditSummary,
@@ -32,6 +38,10 @@ import {
 import { calculateScores } from "@/lib/scoring/scoringEngine";
 import type { ScoreArea } from "@/types/dashboard";
 import type { EvidenceItem } from "@/types/evidence";
+import type {
+  EarningsRecord,
+  PostEarningsInput,
+} from "@/types/earnings";
 import type {
   ManualMemoryDataEntry,
   ManualMemoryDataInput,
@@ -54,6 +64,7 @@ interface MemoryEvidenceWorkspaceProps {
   marketData: MarketDataSnapshot;
   news: NewsFeedSnapshot;
   aiAvailable: boolean;
+  nextEarningsDate: string;
   children: ReactNode;
 }
 
@@ -68,6 +79,7 @@ export function MemoryEvidenceWorkspace({
   marketData,
   news,
   aiAvailable,
+  nextEarningsDate,
   children,
 }: MemoryEvidenceWorkspaceProps) {
   const [entries, setEntries] = useState<ManualMemoryDataEntry[]>([]);
@@ -78,6 +90,7 @@ export function MemoryEvidenceWorkspace({
       message: "Checking local persistence...",
     });
   const [decisionHistory, setDecisionHistory] = useState<DailySnapshot[]>([]);
+  const [earningsRecords, setEarningsRecords] = useState<EarningsRecord[]>([]);
   const [persistenceReady, setPersistenceReady] = useState(false);
 
   useEffect(() => {
@@ -107,6 +120,7 @@ export function MemoryEvidenceWorkspace({
       setStorageAvailable(nextStorageAvailable);
       setPersistenceStatus(persistentState.status);
       setDecisionHistory(persistentState.decisionHistory);
+      setEarningsRecords(persistentState.earningsRecords);
       setPersistenceReady(true);
 
       if (localEntries.length > 0 && persistentState.status.available) {
@@ -126,11 +140,15 @@ export function MemoryEvidenceWorkspace({
 
   const evidenceItems = useMemo(
     () =>
-      [...entries.map(manualMemoryEntryToEvidence), ...baseEvidenceItems].sort(
+      [
+        ...earningsRecords.flatMap(earningsRecordToEvidence),
+        ...entries.map(manualMemoryEntryToEvidence),
+        ...baseEvidenceItems,
+      ].sort(
         (left, right) =>
           Date.parse(right.observedAt) - Date.parse(left.observedAt),
       ),
-    [baseEvidenceItems, entries],
+    [baseEvidenceItems, earningsRecords, entries],
   );
   const scores = useMemo(
     () => calculateScores(evidenceItems, new Date(calculatedAt)),
@@ -246,6 +264,31 @@ export function MemoryEvidenceWorkspace({
     };
   }
 
+  async function addEarningsRecord(input: PostEarningsInput) {
+    const record = createEarningsRecord({
+      input,
+      decision,
+      scores,
+    });
+    setEarningsRecords((current) =>
+      [record, ...current].sort(
+        (left, right) =>
+          Date.parse(right.earningsDate) - Date.parse(left.earningsDate),
+      ),
+    );
+
+    const status = await persistEarningsRecord(record);
+    setPersistenceStatus(status);
+
+    return status.available
+      ? status
+      : {
+          ...status,
+          message:
+            "SQLite persistence is unavailable. The earnings review remains visible for this page session.",
+        };
+  }
+
   return (
     <>
       <section className="score-section" aria-labelledby="scorecard-title">
@@ -279,6 +322,19 @@ export function MemoryEvidenceWorkspace({
       <TrendSummary
         snapshots={decisionHistory}
         persistenceAvailable={persistenceStatus.available}
+      />
+      <EarningsMode
+        earningsDate={nextEarningsDate}
+        calculatedAt={calculatedAt}
+        decision={decision}
+        scores={scores}
+        evidence={evidenceItems}
+        marketData={marketData}
+        news={news}
+        auditWarnings={systemHealth.missingCriticalDataWarnings}
+        aiAvailable={aiAvailable}
+        earningsRecords={earningsRecords}
+        onSubmit={addEarningsRecord}
       />
       <DecisionHistory
         snapshots={decisionHistory}

@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Deterministic Earnings Mode v1
+
+- **Decision:** Add a pre- and post-earnings workflow using a manually configured earnings date and structured user input.
+- **Evidence conversion:** Saved earnings records create separate normalized evidence for business thesis commentary, expectation risk, and reported results versus provided expectations.
+- **Missing expectations:** Revenue or EPS comparisons are omitted when expectations are absent or unparseable; the evidence requires manual review instead of inferring a beat or miss.
+- **Persistence:** Earnings records and their captured pre-earnings deterministic scores and decision are stored in local SQLite.
+- **Safety boundary:** Review outcomes are limited to thesis strengthened, thesis weakened, mixed evidence, or insufficient evidence. No trading instruction is generated.
+- **Author:** Codex
+
 ## 2026-06-07: Deterministic Trend Analysis v1
 
 - **Decision:** Compare persisted daily snapshots across selectable 7-, 14-, and 30-day windows without recalculating historical scores or labels.
