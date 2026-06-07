@@ -232,5 +232,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6H prototype. System health and audit traces explain provider status, evidence use, safeguards, and confidence limits. Scores and the review label remain deterministic; OpenAI is optional and explanation-only.",
+    "Phase 6I prototype. Local SQLite stores manual entries, evidence, deterministic score and decision snapshots, and audit history. localStorage remains a non-destructive migration and fallback path.",
 };

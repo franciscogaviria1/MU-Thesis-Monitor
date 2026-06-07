@@ -11,6 +11,8 @@
 # local files
 .DS_Store
 *.pem
+/data/*.sqlite
+/data/*.sqlite-*
 
 # debug
 npm-debug.log*

@@ -80,10 +80,26 @@ export function parseStoredManualMemoryEntries(
       return [];
     }
 
-    return value.filter(isManualMemoryEntry);
+    return parseManualMemoryEntries(value);
   } catch {
     return [];
   }
+}
+
+export function parseManualMemoryEntries(
+  value: unknown,
+): ManualMemoryDataEntry[] {
+  return Array.isArray(value) ? value.filter(isManualMemoryEntry) : [];
+}
+
+export function mergeManualMemoryEntries(
+  primary: ManualMemoryDataEntry[],
+  fallback: ManualMemoryDataEntry[],
+) {
+  return [...new Map([...primary, ...fallback].map((entry) => [entry.id, entry])).values()].sort(
+    (left, right) =>
+      Date.parse(right.observedAt) - Date.parse(left.observedAt),
+  );
 }
 
 function buildDescription(entry: ManualMemoryDataEntry) {

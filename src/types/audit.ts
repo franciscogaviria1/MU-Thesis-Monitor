@@ -17,6 +17,7 @@ export interface SystemHealthSummary {
   marketData: AuditStatusItem;
   newsData: AuditStatusItem;
   manualMemoryData: AuditStatusItem;
+  persistence: AuditStatusItem;
   evidenceCount: number;
   aiAvailable: boolean;
   lastSuccessfulUpdate: string | null;

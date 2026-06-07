@@ -9,6 +9,7 @@ import type { EvidenceItem } from "@/types/evidence";
 import type { ManualMemoryDataEntry } from "@/types/manualMemoryData";
 import type { MarketDataSnapshot } from "@/types/marketData";
 import type { NewsFeedSnapshot } from "@/types/news";
+import type { PersistenceStatus } from "@/types/persistence";
 import type { ScoringResults } from "@/types/scoring";
 
 const FRESHNESS_DAYS = {
@@ -32,6 +33,7 @@ interface BuildSystemHealthInput {
   evidence: EvidenceItem[];
   decision: DecisionResult;
   aiAvailable: boolean;
+  persistenceStatus?: PersistenceStatus;
   asOf?: Date;
 }
 
@@ -81,6 +83,7 @@ export function buildSystemHealth({
   evidence,
   decision,
   aiAvailable,
+  persistenceStatus,
   asOf = new Date(),
 }: BuildSystemHealthInput): SystemHealthSummary {
   const manualStatus = getManualMemoryStatus(
@@ -108,6 +111,16 @@ export function buildSystemHealth({
       lastUpdated: news.lastUpdated,
     },
     manualMemoryData: manualStatus,
+    persistence: {
+      label: "Local persistence",
+      status: persistenceStatus?.available ? "fresh" : "unavailable",
+      detail:
+        persistenceStatus?.message ??
+        "Local persistence status has not been checked.",
+      lastUpdated: persistenceStatus?.available
+        ? successfulUpdates[0] ?? null
+        : null,
+    },
     evidenceCount: evidence.length,
     aiAvailable,
     lastSuccessfulUpdate:

@@ -12,7 +12,10 @@ import type {
 
 interface MemoryDataSectionProps {
   entries: ManualMemoryDataEntry[];
-  onAddEntry: (input: ManualMemoryDataInput) => boolean;
+  onAddEntry: (input: ManualMemoryDataInput) => Promise<{
+    persisted: boolean;
+    message: string;
+  }>;
   storageAvailable: boolean;
 }
 
@@ -59,7 +62,7 @@ export function MemoryDataSection({
   const [errors, setErrors] = useState<FormErrors>({});
   const [formMessage, setFormMessage] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const input = readForm(new FormData(form));
@@ -71,14 +74,10 @@ export function MemoryDataSection({
       return;
     }
 
-    const persisted = onAddEntry(input);
+    const result = await onAddEntry(input);
     form.reset();
     setErrors({});
-    setFormMessage(
-      persisted
-        ? "Memory data saved locally and added to evidence."
-        : "Memory data added for this session. Local persistence is unavailable.",
-    );
+    setFormMessage(result.message);
   }
 
   return (

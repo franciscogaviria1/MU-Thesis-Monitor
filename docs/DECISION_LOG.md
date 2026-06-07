@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Local SQLite Persistence v1
+
+- **Decision:** Use Node's built-in SQLite support as the primary local persistence provider behind a replaceable interface and server actions.
+- **Data retained:** Manual memory entries, normalized evidence snapshots, three deterministic score snapshots, deterministic decision snapshots, audit summaries, and one updateable daily history record.
+- **Migration:** Existing localStorage manual entries are validated, merged by ID, and imported without deleting or rewriting the user's localStorage data.
+- **Failure behavior:** SQLite failure leaves the current session operational and retains localStorage as a manual-entry fallback when browser storage is available.
+- **Safety boundary:** Persistence stores engine outputs but cannot calculate or alter scores, confidence, or decision labels.
+- **Author:** Codex
+
 ## 2026-06-07: Reliability and Audit Review v1
 
 - **Decision:** Add read-only system-health and audit summaries derived from provider snapshots, normalized evidence, deterministic score metadata, and decision warnings.

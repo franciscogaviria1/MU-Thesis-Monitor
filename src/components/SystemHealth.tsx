@@ -9,6 +9,7 @@ export function SystemHealth({ health }: SystemHealthProps) {
     health.marketData,
     health.newsData,
     health.manualMemoryData,
+    health.persistence,
   ];
 
   return (
