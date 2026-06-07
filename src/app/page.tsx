@@ -2,17 +2,22 @@ import { ConfidenceCoverage } from "@/components/ConfidenceCoverage";
 import { DecisionLog } from "@/components/DecisionLog";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { MarketSnapshot } from "@/components/MarketSnapshot";
+import { NewsFeed } from "@/components/NewsFeed";
 import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ScoreCard } from "@/components/ScoreCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { mockDashboardData } from "@/data/mockDashboardData";
 import { getMuMarketData } from "@/lib/market-data/marketDataService";
+import { getMuNews } from "@/lib/news/newsService";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const data = mockDashboardData;
-  const marketData = await getMuMarketData();
+  const [marketData, news] = await Promise.all([
+    getMuMarketData(),
+    getMuNews(),
+  ]);
 
   return (
     <main>
@@ -59,6 +64,8 @@ export default async function Home() {
         <ConfidenceCoverage data={data.confidenceCoverage} />
 
         <RecommendationPanel recommendation={data.recommendation} />
+
+        <NewsFeed snapshot={news} />
 
         <EvidencePanel
           title={data.evidenceSectionTitle}

@@ -213,5 +213,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6A prototype. Only MU market data may be live; scores, evidence, recommendations, and decision history remain mocked. No OpenAI, database, authentication, or news ingestion is connected.",
+    "Phase 6B prototype. MU market data and raw headlines may be live; scores, classified evidence, recommendations, and decision history remain mocked. No OpenAI, database, authentication, or sentiment scoring is connected.",
 };

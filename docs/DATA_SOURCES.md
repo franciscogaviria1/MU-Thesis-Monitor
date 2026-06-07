@@ -43,8 +43,9 @@ The selected estimate and market-data providers must be recorded before implemen
 | Wall Street Journal | 2 | Daily or as published | Business reporting and broader technology or semiconductor context |
 | Barron's | 2 for reported facts; 3 for opinion | Daily or as published | Investor narrative, analyst commentary, and valuation discussion |
 | MarketWatch | 2 for reported facts; 3 for commentary | Intraday | Market reaction, company coverage, and narrative monitoring |
+| GDELT DOC 2.0 | Aggregator only; tier is assigned from the originating publisher | Every 15 minutes | Discovery and normalization of recent MU-related headlines before analysis |
 
-Journalism may support sentiment and explain events, but it does not override Tier 1 facts. Syndicated articles and repeated coverage of the same event count as one evidence cluster.
+Journalism may support sentiment and explain events, but it does not override Tier 1 facts. GDELT is a discovery provider, not an evidence source; every item retains its original publisher and source tier. Syndicated articles and repeated coverage of the same event count as one evidence cluster.
 
 ## Collection Requirements
 
