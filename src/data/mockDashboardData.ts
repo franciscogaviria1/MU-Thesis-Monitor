@@ -7,10 +7,10 @@ export const mockDashboardData: DashboardData = {
   lastUpdated: "June 6, 2026 at 9:30 AM ET",
   disclaimer: "This is not financial advice.",
   methodologyNote:
-    "Mock scores are shown independently. Deterministic rules, not AI, own final scoring and review labels.",
+    "Three independent scores are calculated from eligible evidence by deterministic rules. AI does not calculate scores.",
   scoreSectionTitle: "Thesis scorecard",
   scoreSectionDescription:
-    "Three independent views of the thesis. A high Valuation Risk score indicates greater risk.",
+    "Deterministic evidence scores with separate confidence. A high Valuation Risk score indicates greater risk.",
   scoreAreas: [
     {
       id: "business-thesis",
@@ -97,19 +97,19 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   confidenceCoverage: {
-    title: "Confidence and coverage",
+    title: "Prototype coverage context",
     description:
-      "Evidence quality is healthy, but the snapshot retains explicit gaps instead of estimating missing values.",
+      "This legacy mock coverage snapshot is operational context only. Use the independent confidence shown on each calculated score.",
     metrics: [
       {
-        label: "Confidence score",
+        label: "Mock coverage reference",
         value: 82,
-        detail: "High-confidence mock evidence set",
+        detail: "Not used by the deterministic scoring engine",
       },
       {
-        label: "Data coverage",
+        label: "Mock data coverage",
         value: 76,
-        detail: "Core inputs pass the mock evidence gate",
+        detail: "Retained for dashboard continuity in this phase",
       },
     ],
     missingDataTitle: "Missing data warnings",
@@ -138,7 +138,7 @@ export const mockDashboardData: DashboardData = {
   },
   evidenceSectionTitle: "Evidence register",
   evidenceSectionDescription:
-    "Normalized provider and locally entered records remain separate from interpretation and scoring.",
+    "Normalized records show provenance and impact. Only eligible deterministic fields can affect the scores above.",
   evidenceItems: [
     {
       id: "evidence-001",
@@ -248,5 +248,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6D prototype. MU market data, raw headlines, and local manual memory observations are normalized as evidence; scores, recommendations, and decision history remain mocked. No OpenAI, database, paid scraping, authentication, or sentiment scoring is connected.",
+    "Phase 6E prototype. Three deterministic scores use normalized evidence; recommendation and decision history remain mocked and unchanged. No OpenAI, database, paid scraping, authentication, or AI classification is connected.",
 };

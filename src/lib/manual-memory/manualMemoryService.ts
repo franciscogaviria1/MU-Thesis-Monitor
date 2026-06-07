@@ -59,7 +59,7 @@ export function manualMemoryEntryToEvidence(
     observedAt: entry.observedAt,
     createdAt: entry.observedAt,
     evidenceType: entry.category === "other" ? "manual_input" : "memory_pricing",
-    impactDirection: "unknown",
+    impactDirection: impactForDirection(entry.direction),
     affectedArea: "business_thesis_health",
     confidence: confidenceForTier(entry.sourceTier),
     analysisStatus: "not_analyzed",
@@ -100,6 +100,21 @@ function confidenceForTier(tier: EvidenceSourceTier): EvidenceConfidence {
     case "tier_3":
       return "low";
     case "tier_4":
+    case "unknown":
+      return "unknown";
+  }
+}
+
+function impactForDirection(
+  direction: MemoryMetricDirection,
+): EvidenceItem["impactDirection"] {
+  switch (direction) {
+    case "rising":
+      return "positive";
+    case "falling":
+      return "negative";
+    case "flat":
+      return "neutral";
     case "unknown":
       return "unknown";
   }

@@ -3,8 +3,6 @@ import { DecisionLog } from "@/components/DecisionLog";
 import { MarketSnapshot } from "@/components/MarketSnapshot";
 import { MemoryEvidenceWorkspace } from "@/components/MemoryEvidenceWorkspace";
 import { RecommendationPanel } from "@/components/RecommendationPanel";
-import { ScoreCard } from "@/components/ScoreCard";
-import { SectionHeading } from "@/components/SectionHeading";
 import { mockDashboardData } from "@/data/mockDashboardData";
 import { buildEvidenceItems } from "@/lib/evidence/evidenceService";
 import { getMuMarketData } from "@/lib/market-data/marketDataService";
@@ -54,27 +52,18 @@ export default async function Home() {
 
         <MarketSnapshot snapshot={marketData} />
 
-        <section className="score-section" aria-labelledby="scorecard-title">
-          <SectionHeading
-            title={data.scoreSectionTitle}
-            description={data.scoreSectionDescription}
-          />
-          <div className="score-grid">
-            {data.scoreAreas.map((area, index) => (
-              <ScoreCard key={area.id} area={area} index={index} />
-            ))}
-          </div>
-        </section>
-
-        <ConfidenceCoverage data={data.confidenceCoverage} />
-
-        <RecommendationPanel recommendation={data.recommendation} />
-
         <MemoryEvidenceWorkspace
           baseEvidenceItems={evidenceItems}
+          scoreAreas={data.scoreAreas}
+          scoreSectionTitle={data.scoreSectionTitle}
+          scoreSectionDescription={data.scoreSectionDescription}
           evidenceTitle={data.evidenceSectionTitle}
           evidenceDescription={data.evidenceSectionDescription}
-        />
+          calculatedAt={new Date().toISOString()}
+        >
+          <ConfidenceCoverage data={data.confidenceCoverage} />
+          <RecommendationPanel recommendation={data.recommendation} />
+        </MemoryEvidenceWorkspace>
 
         <DecisionLog
           title={data.decisionLogTitle}

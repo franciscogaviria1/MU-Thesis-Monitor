@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { MemoryDataSection } from "@/components/MemoryDataSection";
+import { ScoreCard } from "@/components/ScoreCard";
+import { SectionHeading } from "@/components/SectionHeading";
 import {
   createManualMemoryEntry,
   MANUAL_MEMORY_STORAGE_KEY,
   manualMemoryEntryToEvidence,
   parseStoredManualMemoryEntries,
 } from "@/lib/manual-memory/manualMemoryService";
+import { calculateScores } from "@/lib/scoring/scoringEngine";
+import type { ScoreArea } from "@/types/dashboard";
 import type { EvidenceItem } from "@/types/evidence";
 import type {
   ManualMemoryDataEntry,
@@ -17,14 +21,24 @@ import type {
 
 interface MemoryEvidenceWorkspaceProps {
   baseEvidenceItems: EvidenceItem[];
+  scoreAreas: ScoreArea[];
+  scoreSectionTitle: string;
+  scoreSectionDescription: string;
   evidenceTitle: string;
   evidenceDescription: string;
+  calculatedAt: string;
+  children: ReactNode;
 }
 
 export function MemoryEvidenceWorkspace({
   baseEvidenceItems,
+  scoreAreas,
+  scoreSectionTitle,
+  scoreSectionDescription,
   evidenceTitle,
   evidenceDescription,
+  calculatedAt,
+  children,
 }: MemoryEvidenceWorkspaceProps) {
   const [entries, setEntries] = useState<ManualMemoryDataEntry[]>([]);
   const [storageAvailable, setStorageAvailable] = useState(true);
@@ -57,6 +71,10 @@ export function MemoryEvidenceWorkspace({
       ),
     [baseEvidenceItems, entries],
   );
+  const scores = useMemo(
+    () => calculateScores(evidenceItems, new Date(calculatedAt)),
+    [calculatedAt, evidenceItems],
+  );
 
   function addEntry(input: ManualMemoryDataInput) {
     const nextEntries = [createManualMemoryEntry(input), ...entries];
@@ -77,6 +95,25 @@ export function MemoryEvidenceWorkspace({
 
   return (
     <>
+      <section className="score-section" aria-labelledby="scorecard-title">
+        <SectionHeading
+          title={scoreSectionTitle}
+          description={scoreSectionDescription}
+        />
+        <div className="score-grid">
+          {scoreAreas.map((area, index) => (
+            <ScoreCard
+              key={area.id}
+              area={area}
+              result={scores[scoreKey(area.id)]}
+              index={index}
+            />
+          ))}
+        </div>
+      </section>
+
+      {children}
+
       <MemoryDataSection
         entries={entries}
         onAddEntry={addEntry}
@@ -89,4 +126,17 @@ export function MemoryEvidenceWorkspace({
       />
     </>
   );
+}
+
+function scoreKey(areaId: string) {
+  switch (areaId) {
+    case "business-thesis":
+      return "business_thesis_health" as const;
+    case "valuation-risk":
+      return "valuation_risk" as const;
+    case "market-sentiment":
+      return "market_sentiment" as const;
+    default:
+      throw new Error(`Unsupported score area: ${areaId}`);
+  }
 }

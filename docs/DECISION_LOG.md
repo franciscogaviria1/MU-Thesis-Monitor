@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Deterministic Scoring Engine v1
+
+- **Decision:** Calculate Business Thesis Health, Valuation Risk, and Market Sentiment independently from normalized evidence using versioned, deterministic rules.
+- **Rationale:** The first scoring layer must be transparent, repeatable, and operational before AI classification or recommendation generation exists.
+- **Rules:** Explicit evidence direction and deterministic market thresholds may move scores; unknown, unavailable, stale, or manual-review-required evidence cannot. Missing inputs reduce confidence and coverage without being treated as negative evidence.
+- **Confidence:** Each score reports separate confidence derived from coverage, source quality, freshness, and directional agreement.
+- **Safety boundary:** The engine produces no composite score, does not call AI, and does not change the existing recommendation label.
+- **Author:** Codex
+
 ## 2026-06-07: Local Manual Memory Data
 
 - **Decision:** Store structured memory-pricing and HBM observations in browser `localStorage` and convert them into normalized evidence at the client boundary.

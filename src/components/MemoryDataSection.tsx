@@ -86,7 +86,7 @@ export function MemoryDataSection({
       <SectionHeading
         eyebrow="Manual structured data"
         title="Memory data"
-        description="Record pricing and HBM observations locally. Entries remain unscored and not analyzed."
+        description="Record pricing and HBM observations locally. Explicit direction may affect deterministic scores; no AI analysis is applied."
       />
 
       <div className="memory-data-layout">

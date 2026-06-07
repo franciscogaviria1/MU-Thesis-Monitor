@@ -506,6 +506,31 @@ a:focus-visible {
   line-height: 1.65;
 }
 
+.score-card__confidence {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.45rem 1rem;
+  margin: 1.4rem 0 1.8rem;
+}
+
+.score-card__confidence > span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.score-card__confidence > strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+}
+
+.score-card__confidence .meter {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
 .score-card__drivers {
   padding-top: 1.35rem;
   border-top: 1px solid var(--line);
@@ -520,12 +545,50 @@ a:focus-visible {
 }
 
 .score-card__drivers li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  display: block;
   padding: 0.72rem 0;
   border-bottom: 1px solid rgba(210, 204, 189, 0.75);
+}
+
+.score-card__drivers .driver-signal {
+  display: block;
+  line-height: 1.5;
+}
+
+.score-card__evidence {
+  margin-top: 1.5rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--line);
+}
+
+.score-card__evidence ul {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.score-card__evidence li {
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(210, 204, 189, 0.75);
+}
+
+.score-card__evidence li:last-child {
+  border-bottom: 0;
+}
+
+.score-card__evidence strong {
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.score-card__evidence span,
+.score-card__evidence > p {
+  margin: 0.65rem 0 0;
+  color: var(--muted);
+  font-size: 0.66rem;
 }
 
 .score-card__drivers li:last-child {

@@ -64,6 +64,19 @@ Each available input receives a deterministic subscore from `0-100`. A score is 
 
 Weight changes are governance changes. They must be documented, versioned, and applied prospectively so historical score changes remain explainable.
 
+## Version 1 Rules
+
+The first implementation uses a neutral `50` baseline and only moves a score when eligible evidence has an explicit deterministic direction or a documented numeric market threshold.
+
+- Positive, neutral, and negative evidence map to `80`, `50`, and `20`.
+- Business Thesis Health uses the documented category weights and renormalizes the available eligible categories.
+- Valuation Risk uses explicit evidence direction plus drawdown bands: under 10% = 80 risk, 10-19.99% = 65, 20-34.99% = 45, and 35% or more = 30.
+- Market Sentiment uses classified evidence direction and daily-price-change bands. Raw `not_analyzed` headlines with unknown impact do not move the score.
+- Evidence marked `manual_review_required`, outside the freshness window, or with unknown impact is excluded from score movement.
+- Freshness windows are 90 days for Business Thesis Health, 30 days for Valuation Risk, and 14 days for Market Sentiment.
+
+These rules are intentionally conservative. Missing inputs retain the neutral baseline or the weighted result from available evidence and lower confidence instead of being converted into adverse evidence.
+
 ## Confidence Score
 
 Each independent score has a separate confidence value from `0-100`. Confidence does not alter the score; it describes the reliability of the evidence behind it.
