@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { EvidencePanel } from "@/components/EvidencePanel";
+import { AIExplanationPanel } from "@/components/AIExplanationPanel";
 import { MemoryDataSection } from "@/components/MemoryDataSection";
 import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ScoreCard } from "@/components/ScoreCard";
@@ -119,6 +120,12 @@ export function MemoryEvidenceWorkspace({
       </section>
 
       <RecommendationPanel decision={decision} />
+
+      <AIExplanationPanel
+        scores={scores}
+        decision={decision}
+        evidence={evidenceItems}
+      />
 
       {children}
 

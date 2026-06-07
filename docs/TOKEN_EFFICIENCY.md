@@ -59,3 +59,10 @@ Before an AI request, the system must confirm:
 6. The expected output has a validation schema.
 
 If any condition fails, the AI request must not be made.
+
+## Explanation Requests
+
+- Generate dashboard explanations only after an explicit user action.
+- Limit each request to the three score results, the decision result, warnings, and at most six prioritized evidence summaries.
+- Reuse a component-state response while the request mode and deterministic dashboard snapshot are unchanged.
+- Do not send source URLs, full raw records, unrelated evidence history, or the complete evidence store to the model.

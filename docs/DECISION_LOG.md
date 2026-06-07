@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Optional OpenAI Explanation Layer v1
+
+- **Decision:** Add a server-only, user-initiated explanation layer for the existing deterministic scores and decision label.
+- **Boundary:** The model receives a bounded snapshot and returns validated JSON containing narrative analysis only; the output contract has no score or decision-label fields.
+- **Token controls:** Requests include at most six prioritized evidence summaries, run only on button click, disable provider storage, and are cached in component state for an unchanged snapshot.
+- **Failure behavior:** Missing credentials, provider errors, and invalid output show an unavailable state while deterministic scores and the review label remain visible and unchanged.
+- **Safety boundary:** AI output is explicitly not used to calculate scores, cannot issue trading instructions, and is labeled not financial advice.
+- **Author:** Codex
+
 ## 2026-06-07: Deterministic Decision Engine v1
 
 - **Decision:** Assign one review label from the three independent score results, confidence gates, evidence quality, and missing or stale data warnings.
