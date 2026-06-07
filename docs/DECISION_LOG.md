@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Unified Evidence Model
+
+- **Decision:** Normalize market data, news, and manual prototype records into one `EvidenceItem` contract before presentation.
+- **Rationale:** A shared evidence shape preserves source traceability and makes provider failures visible without coupling ingestion to scoring or AI interpretation.
+- **Affected components:** Evidence types, deterministic provider-to-evidence conversion, mock evidence records, and the dashboard evidence register.
+- **Safety boundary:** Conversion assigns no AI classification, leaves raw news impact unassessed, and cannot modify scores or recommendation labels.
+- **Failure behavior:** Failed conversions are omitted without breaking the dashboard; unavailable or stale market state is retained as review-required evidence when a snapshot exists.
+- **Author:** Codex
+
 ## 2026-06-06: Initial News Ingestion Provider
 
 - **Decision:** Use the public GDELT DOC 2.0 API as the first replaceable provider for recent English-language Micron Technology headlines.

@@ -1,3 +1,5 @@
+import type { EvidenceItem } from "@/types/evidence";
+
 export type ThesisArea =
   | "Business Thesis Health"
   | "Valuation Risk"
@@ -54,16 +56,6 @@ export interface Recommendation {
   reminder: string;
   challengeButtonLabel: string;
   challengeButtonNote: string;
-}
-
-export interface EvidenceItem {
-  id: string;
-  title: string;
-  tier: 1 | 2 | 3 | 4;
-  sourceName: string;
-  timestamp: string;
-  impact: EvidenceImpact;
-  affectedArea: ThesisArea;
 }
 
 export interface DecisionLogEntry {

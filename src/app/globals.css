@@ -578,6 +578,10 @@ a:focus-visible {
   color: var(--neutral);
 }
 
+.impact--unknown {
+  color: var(--muted);
+}
+
 .coverage-section {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) minmax(16rem, 0.65fr);
@@ -806,7 +810,7 @@ a:focus-visible {
 
 .evidence-table {
   width: 100%;
-  min-width: 820px;
+  min-width: 1050px;
   border-collapse: collapse;
   text-align: left;
 }
@@ -839,21 +843,51 @@ a:focus-visible {
 }
 
 .evidence-table td:first-child {
-  width: 42%;
+  width: 44%;
 }
 
-.evidence-table td strong {
+.evidence-title {
   display: block;
   margin-bottom: 0.45rem;
   color: var(--ink);
   font-size: 0.87rem;
   font-weight: 650;
+  text-decoration-color: var(--line-dark);
+  text-underline-offset: 0.2rem;
+}
+
+.evidence-title:hover {
+  color: var(--accent-dark);
+}
+
+.evidence-table td:first-child > p {
+  max-width: 58rem;
+  margin: 0 0 0.65rem;
+  line-height: 1.5;
+}
+
+.evidence-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.8rem;
+  align-items: center;
 }
 
 .evidence-table time {
-  display: block;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.67rem;
+}
+
+.evidence-meta span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.63rem;
+  text-transform: capitalize;
+}
+
+.evidence-meta span::before {
+  margin-right: 0.8rem;
+  color: var(--line-dark);
+  content: "/";
 }
 
 .evidence-table td:nth-child(2) span {
@@ -869,6 +903,33 @@ a:focus-visible {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.63rem;
   font-weight: 700;
+}
+
+.confidence {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.22rem 0.4rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.confidence--high {
+  border-color: rgba(47, 108, 82, 0.45);
+  color: var(--positive);
+}
+
+.confidence--medium {
+  border-color: rgba(196, 111, 43, 0.45);
+  color: var(--accent-dark);
+}
+
+.confidence--low {
+  border-color: rgba(163, 68, 53, 0.4);
+  color: var(--negative);
 }
 
 .decision-log {

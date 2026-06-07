@@ -1,14 +1,11 @@
-export type NewsSourceTier =
-  | "tier_1"
-  | "tier_2"
-  | "tier_3"
-  | "tier_4"
-  | "unknown";
+import type {
+  EvidenceAffectedArea,
+  EvidenceSourceTier,
+} from "@/types/evidence";
 
-export type NewsRelatedArea =
-  | "business_thesis_health"
-  | "valuation_risk"
-  | "market_sentiment";
+export type NewsSourceTier = EvidenceSourceTier;
+
+export type NewsRelatedArea = EvidenceAffectedArea;
 
 export type NewsItem = {
   id: string;

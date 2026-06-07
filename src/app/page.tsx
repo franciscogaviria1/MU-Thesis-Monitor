@@ -2,11 +2,11 @@ import { ConfidenceCoverage } from "@/components/ConfidenceCoverage";
 import { DecisionLog } from "@/components/DecisionLog";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { MarketSnapshot } from "@/components/MarketSnapshot";
-import { NewsFeed } from "@/components/NewsFeed";
 import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ScoreCard } from "@/components/ScoreCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { mockDashboardData } from "@/data/mockDashboardData";
+import { buildEvidenceItems } from "@/lib/evidence/evidenceService";
 import { getMuMarketData } from "@/lib/market-data/marketDataService";
 import { getMuNews } from "@/lib/news/newsService";
 
@@ -18,6 +18,11 @@ export default async function Home() {
     getMuMarketData(),
     getMuNews(),
   ]);
+  const evidenceItems = buildEvidenceItems({
+    marketData,
+    news,
+    existingEvidence: data.evidenceItems,
+  });
 
   return (
     <main>
@@ -65,12 +70,10 @@ export default async function Home() {
 
         <RecommendationPanel recommendation={data.recommendation} />
 
-        <NewsFeed snapshot={news} />
-
         <EvidencePanel
           title={data.evidenceSectionTitle}
           description={data.evidenceSectionDescription}
-          items={data.evidenceItems}
+          items={evidenceItems}
         />
 
         <DecisionLog
