@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { MemoryDataSection } from "@/components/MemoryDataSection";
+import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ScoreCard } from "@/components/ScoreCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import {
@@ -11,6 +12,7 @@ import {
   manualMemoryEntryToEvidence,
   parseStoredManualMemoryEntries,
 } from "@/lib/manual-memory/manualMemoryService";
+import { calculateDecision } from "@/lib/decision/decisionEngine";
 import { calculateScores } from "@/lib/scoring/scoringEngine";
 import type { ScoreArea } from "@/types/dashboard";
 import type { EvidenceItem } from "@/types/evidence";
@@ -75,6 +77,10 @@ export function MemoryEvidenceWorkspace({
     () => calculateScores(evidenceItems, new Date(calculatedAt)),
     [calculatedAt, evidenceItems],
   );
+  const decision = useMemo(
+    () => calculateDecision({ scores, evidence: evidenceItems }),
+    [evidenceItems, scores],
+  );
 
   function addEntry(input: ManualMemoryDataInput) {
     const nextEntries = [createManualMemoryEntry(input), ...entries];
@@ -111,6 +117,8 @@ export function MemoryEvidenceWorkspace({
           ))}
         </div>
       </section>
+
+      <RecommendationPanel decision={decision} />
 
       {children}
 

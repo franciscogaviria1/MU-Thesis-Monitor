@@ -2,7 +2,6 @@ import { ConfidenceCoverage } from "@/components/ConfidenceCoverage";
 import { DecisionLog } from "@/components/DecisionLog";
 import { MarketSnapshot } from "@/components/MarketSnapshot";
 import { MemoryEvidenceWorkspace } from "@/components/MemoryEvidenceWorkspace";
-import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { mockDashboardData } from "@/data/mockDashboardData";
 import { buildEvidenceItems } from "@/lib/evidence/evidenceService";
 import { getMuMarketData } from "@/lib/market-data/marketDataService";
@@ -62,7 +61,6 @@ export default async function Home() {
           calculatedAt={new Date().toISOString()}
         >
           <ConfidenceCoverage data={data.confidenceCoverage} />
-          <RecommendationPanel recommendation={data.recommendation} />
         </MemoryEvidenceWorkspace>
 
         <DecisionLog

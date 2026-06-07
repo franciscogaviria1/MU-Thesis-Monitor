@@ -7,7 +7,7 @@ export const mockDashboardData: DashboardData = {
   lastUpdated: "June 6, 2026 at 9:30 AM ET",
   disclaimer: "This is not financial advice.",
   methodologyNote:
-    "Three independent scores are calculated from eligible evidence by deterministic rules. AI does not calculate scores.",
+    "Three independent scores and the review label are calculated from eligible evidence by deterministic rules. AI calculates neither.",
   scoreSectionTitle: "Thesis scorecard",
   scoreSectionDescription:
     "Deterministic evidence scores with separate confidence. A high Valuation Risk score indicates greater risk.",
@@ -119,22 +119,6 @@ export const mockDashboardData: DashboardData = {
     ],
     verifiedLabel: "Last verified",
     lastVerified: "June 6, 2026 at 9:15 AM ET",
-  },
-  recommendation: {
-    eyebrow: "Deterministic review posture",
-    label: "Hold",
-    explanation:
-      "Business Thesis Health remains supportive, but elevated Valuation Risk prevents a Strong Hold label. Market Sentiment is constructive without overriding the valuation constraint.",
-    evidenceTitle: "Why this label",
-    evidence: [
-      "HBM and AI infrastructure demand support the operating thesis.",
-      "Forward expectations leave limited room for execution misses.",
-      "Evidence coverage is sufficient, with two disclosed gaps.",
-    ],
-    reminder:
-      "This is a review label, not a trading instruction. No transaction is authorized or recommended.",
-    challengeButtonLabel: "Challenge thesis",
-    challengeButtonNote: "AI challenge workflow is not connected in this phase.",
   },
   evidenceSectionTitle: "Evidence register",
   evidenceSectionDescription:
@@ -248,5 +232,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6E prototype. Three deterministic scores use normalized evidence; recommendation and decision history remain mocked and unchanged. No OpenAI, database, paid scraping, authentication, or AI classification is connected.",
+    "Phase 6F prototype. Three deterministic scores and one deterministic review label use normalized evidence; decision history remains mocked. No OpenAI, database, paid scraping, authentication, or AI classification is connected.",
 };

@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-06-07: Deterministic Decision Engine v1
+
+- **Decision:** Assign one review label from the three independent score results, confidence gates, evidence quality, and missing or stale data warnings.
+- **Precedence:** Insufficient critical evidence, materially adverse Business Thesis Health, Reduce Review triggers, Watch triggers, Hold, then Strong Hold.
+- **Safety rules:** Market Sentiment alone cannot produce Exit Review; Tier 4 or unknown evidence alone cannot produce Reduce Review or Exit Review; missing critical data prevents Strong Hold.
+- **Confidence:** Decision confidence is 50% Business Thesis Health confidence, 30% Valuation Risk confidence, and 20% Market Sentiment confidence.
+- **Safety boundary:** Labels are monitoring postures only. Exit Review is not a sell instruction and no label authorizes a transaction.
+- **Author:** Codex
+
 ## 2026-06-07: Deterministic Scoring Engine v1
 
 - **Decision:** Calculate Business Thesis Health, Valuation Risk, and Market Sentiment independently from normalized evidence using versioned, deterministic rules.

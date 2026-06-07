@@ -788,6 +788,7 @@ a:focus-visible {
   font-weight: 480;
   letter-spacing: -0.075em;
   line-height: 0.9;
+  overflow-wrap: anywhere;
 }
 
 .recommendation-panel__label-row span {
@@ -803,6 +804,14 @@ a:focus-visible {
   color: #c9c7be;
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: 1.65;
+}
+
+.decision-safety-copy {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: #9e9d96;
+  font-size: 0.76rem;
+  line-height: 1.55;
 }
 
 .recommendation-panel__action {
@@ -852,6 +861,36 @@ a:focus-visible {
   color: #ceccc4;
   font-size: 0.86rem;
   line-height: 1.55;
+}
+
+.decision-subheading {
+  margin-top: 2rem;
+}
+
+.decision-warnings li {
+  color: #f1b49d;
+}
+
+.decision-evidence-list li {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.decision-evidence-list strong {
+  color: #f6f2e9;
+  font-size: 0.78rem;
+}
+
+.decision-evidence-list span {
+  color: #96958e;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.64rem;
+}
+
+.decision-empty {
+  margin: 0.8rem 0 0;
+  color: #96958e;
+  font-size: 0.72rem;
 }
 
 .policy-reminder {

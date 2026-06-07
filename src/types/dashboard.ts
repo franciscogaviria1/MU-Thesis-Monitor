@@ -47,17 +47,6 @@ export interface ConfidenceCoverage {
   lastVerified: string;
 }
 
-export interface Recommendation {
-  eyebrow: string;
-  label: DecisionLabel;
-  explanation: string;
-  evidenceTitle: string;
-  evidence: string[];
-  reminder: string;
-  challengeButtonLabel: string;
-  challengeButtonNote: string;
-}
-
 export interface DecisionLogEntry {
   id: string;
   date: string;
@@ -77,7 +66,6 @@ export interface DashboardData {
   scoreSectionDescription: string;
   scoreAreas: ScoreArea[];
   confidenceCoverage: ConfidenceCoverage;
-  recommendation: Recommendation;
   evidenceSectionTitle: string;
   evidenceSectionDescription: string;
   evidenceItems: EvidenceItem[];
