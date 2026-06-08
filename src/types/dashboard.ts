@@ -59,8 +59,6 @@ export interface DashboardData {
   appName: string;
   subtitle: string;
   nextEarningsDate: string;
-  lastUpdatedLabel: string;
-  lastUpdated: string;
   disclaimer: string;
   methodologyNote: string;
   scoreSectionTitle: string;

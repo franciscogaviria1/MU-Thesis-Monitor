@@ -20,6 +20,7 @@ export default async function Home() {
     news,
     existingEvidence: data.evidenceItems,
   });
+  const calculatedAt = new Date().toISOString();
 
   return (
     <main>
@@ -36,8 +37,13 @@ export default async function Home() {
 
         <div className="site-header__meta">
           <div>
-            <span>{data.lastUpdatedLabel}</span>
-            <time>{data.lastUpdated}</time>
+            <span>Dashboard generated</span>
+            <time dateTime={calculatedAt}>
+              {new Date(calculatedAt).toLocaleString("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </time>
           </div>
           <strong>{data.disclaimer}</strong>
         </div>
@@ -58,7 +64,7 @@ export default async function Home() {
           scoreSectionDescription={data.scoreSectionDescription}
           evidenceTitle={data.evidenceSectionTitle}
           evidenceDescription={data.evidenceSectionDescription}
-          calculatedAt={new Date().toISOString()}
+          calculatedAt={calculatedAt}
           marketData={marketData}
           news={news}
           aiAvailable={Boolean(process.env.OPENAI_API_KEY?.trim())}

@@ -80,9 +80,6 @@ export async function generateAIExplanation(
     });
 
     if (!response.ok) {
-      console.warn(
-        `OpenAI explanation request was unavailable (${response.status}).`,
-      );
       return {
         status: "error",
         message:
@@ -110,7 +107,6 @@ export async function generateAIExplanation(
       generatedAt: (options.now ?? (() => new Date()))().toISOString(),
     };
   } catch {
-    console.warn("OpenAI explanation request could not be completed.");
     return {
       status: "error",
       message:

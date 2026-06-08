@@ -55,10 +55,19 @@ export function AIExplanationPanel({
     }
 
     setIsLoading(true);
-    const nextResult = await requestAIExplanation(request);
-    setCache((current) => ({ ...current, [cacheKey]: nextResult }));
-    setResult(nextResult);
-    setIsLoading(false);
+    try {
+      const nextResult = await requestAIExplanation(request);
+      setCache((current) => ({ ...current, [cacheKey]: nextResult }));
+      setResult(nextResult);
+    } catch {
+      setResult({
+        status: "error",
+        message:
+          "AI explanation could not be reached. Deterministic scores and the review label remain available.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

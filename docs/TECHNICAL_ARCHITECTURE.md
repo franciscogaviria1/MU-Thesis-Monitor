@@ -3,92 +3,93 @@
 ## System Flow
 
 ```text
-Data Sources
-    -> Data Collection
-    -> Database
-    -> Deterministic Rules Engine
-    -> OpenAI Analysis Layer
-    -> Dashboard
+Market and news providers -----> normalized evidence -----> deterministic scores
+Manual and earnings input -----/                           -> deterministic decision
+                                                               |
+                                                               v
+Local SQLite <---- server actions <---- dashboard + audit + trends
+                                                               |
+                                      optional, user-initiated OpenAI explanation
 ```
 
-The system is local-first and evidence-driven. Every displayed fact, score, and AI explanation must be traceable to stored source evidence and a documented processing step.
+The Next.js App Router application is local-first and evidence-driven. Provider
+access, SQLite, and OpenAI remain server-side. Browser components receive only
+normalized data, status messages, and deterministic results.
 
-## Data Sources
+## Data Sources and Collection
 
-Expected source categories include:
+Current collection is request-driven:
 
-- Micron filings, earnings materials, guidance, and investor communications
-- regulatory filings and official company disclosures
-- DRAM, NAND, and HBM pricing or market data
-- semiconductor supply, capital-spending, and inventory data
-- analyst estimates and revisions
-- reputable business and industry news
-- market price and sector benchmark data
+- Alpha Vantage provides optional MU market data.
+- GDELT provides keyless MU news.
+- Manual forms capture memory-pricing, HBM, and earnings observations.
+- Reference fixtures remain clearly labeled where live sources do not exist.
 
-Each source must retain its publisher, original URL or identifier, publication time, retrieval time, and applicable reporting period.
+Provider interfaces keep sources replaceable. Collectors normalize dates and
+units, detect duplicates where applicable, and return structured `available`,
+`stale`, or `unavailable` states. Expected failures must not throw into page
+rendering or produce disruptive development overlays.
 
-## Data Collection
+AI output is not a source. Any explanation must reference the normalized
+evidence supplied to it.
 
-Collectors retrieve data on source-appropriate schedules, preserve raw evidence, normalize dates and units, and detect duplicates. Collection failures must be visible and must not silently reuse stale data as current.
+## Evidence and Persistence
 
-AI output is not a source. Any classification or summary must reference the underlying collected evidence.
+All provider and manual records are converted to the shared `EvidenceItem`
+contract before scoring or display.
 
-## Database
+Node's built-in SQLite support stores:
 
-The database stores raw evidence, normalized observations, source provenance, collection status, scoring inputs, rule versions, score history, confidence values, and AI-generated analysis. Facts and AI interpretations remain separate.
+- manual memory entries and earnings records;
+- daily normalized evidence snapshots;
+- three independent score snapshots;
+- deterministic decision snapshots;
+- audit summaries and decision history.
 
-This document defines responsibilities only; it does not prescribe a database schema.
+The default database is `data/mu-thesis-monitor.sqlite`; it may be overridden
+with `MU_PERSISTENCE_PATH`. Database files are ignored by Git.
 
-## Deterministic Rules Engine
+Server actions are the only browser-to-SQLite boundary. Browser localStorage is
+retained as non-destructive migration support and a manual-entry fallback.
+Persistence failure must not prevent scoring or dashboard rendering.
 
-The rules engine:
+## Deterministic Engines
 
-- validates evidence eligibility and freshness;
-- maps normalized inputs to documented subscores;
-- applies configured weights;
-- calculates the three independent scores and confidence values;
-- returns `Insufficient Evidence` when evidence gates are not met;
-- records rule versions and the inputs behind each result.
+The scoring engine independently calculates Business Thesis Health, Valuation
+Risk, and Market Sentiment, each with confidence, reasons, and evidence
+references. The decision engine applies documented confidence and safeguard
+rules to produce a review label.
 
-The rules engine is the sole authority for final scores. The same evidence and rule version must produce the same result.
+These engines are the sole authority for scores and labels. Equivalent evidence
+and rule versions must produce equivalent results. AI, UI forms, persistence,
+trends, and audit metadata cannot override them.
 
-## OpenAI Analysis Layer
+## OpenAI Explanation Layer
 
-OpenAI may:
+The explanation service is called only through a server action after a user
+click. It sends a bounded set of deterministic results and selected evidence
+summaries, requests structured JSON, and validates the response before display.
 
-- classify headlines using defined labels;
-- summarize sourced evidence;
-- detect contradictions between sources or time periods;
-- generate a sourced bear case and identify thesis risks;
-- explain deterministic score changes in plain language.
+OpenAI may summarize evidence, identify contradictions, and generate bounded
+bull and bear cases. It must not invent facts or sources, calculate or modify
+scores, alter the decision label, fill missing evidence, or issue trading
+instructions.
 
-OpenAI must not:
+`OPENAI_API_KEY` never enters client props, browser logs, or a `NEXT_PUBLIC_`
+variable. Missing credentials, provider failure, or invalid output leaves the
+deterministic dashboard fully available.
 
-- invent facts, figures, events, quotations, or sources;
-- treat its own output as evidence;
-- calculate, adjust, or override final scores;
-- fill missing evidence with estimates;
-- issue trading recommendations or buy, hold, or sell instructions.
+## Dashboard and Operations
 
-All OpenAI output must include references to the evidence it used. Unsupported output must be rejected, flagged, or omitted rather than displayed as fact.
+The dashboard presents the independent scores, review label, evidence register,
+system health, audit summary, decision history, trends, and earnings workflow.
+It exposes stale, missing, and unavailable states rather than silently treating
+old data as current.
 
-## Dashboard
+Current operational boundaries:
 
-The dashboard presents:
-
-- Business Thesis Health, Valuation Risk, and Market Sentiment separately;
-- confidence and freshness for each score;
-- supporting and contradicting evidence;
-- material score changes and their deterministic causes;
-- unresolved evidence gaps and collection failures;
-- AI summaries clearly labeled as analysis.
-
-The dashboard supports human judgment. It is not a prediction tool, trading bot, or automated investment adviser.
-
-## Operational Boundaries
-
-- Scoring rules, weights, and evidence thresholds are versioned governance artifacts.
-- Source failures and stale evidence reduce confidence or produce `Insufficient Evidence`.
-- Raw evidence is retained so conclusions can be audited.
-- AI analysis may fail independently without preventing deterministic scoring.
-- A data correction triggers recalculation under the applicable rule version and remains visible in history.
+- no cloud database, authentication, deployment, or background ingestion job;
+- no paid data scraping;
+- no automatic trading instruction;
+- no provider or persistence exception may enter the expected render path;
+- data corrections remain visible through updated snapshots and history.

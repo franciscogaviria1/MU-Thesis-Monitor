@@ -4,8 +4,6 @@ export const mockDashboardData: DashboardData = {
   appName: "MU Thesis Monitor",
   subtitle: "Local thesis-monitoring dashboard",
   nextEarningsDate: "2026-06-24",
-  lastUpdatedLabel: "Mock snapshot",
-  lastUpdated: "June 6, 2026 at 9:30 AM ET",
   disclaimer: "This is not financial advice.",
   methodologyNote:
     "Three independent scores and the review label are calculated from eligible evidence by deterministic rules. AI calculates neither.",
@@ -51,7 +49,7 @@ export const mockDashboardData: DashboardData = {
       score: 63,
       status: "Elevated",
       summary:
-        "The mock valuation reflects substantial earnings improvement, leaving less room for execution misses or weaker memory pricing.",
+        "The reference valuation context reflects substantial earnings improvement, leaving less room for execution misses or weaker memory pricing.",
       drivers: [
         {
           label: "Forward valuation",
@@ -145,7 +143,7 @@ export const mockDashboardData: DashboardData = {
       id: "evidence-002",
       title: "DRAM contract pricing trend remains constructive",
       description:
-        "Mock memory-pricing observation used by the prototype dashboard.",
+        "Reference memory-pricing observation retained until verified live pricing is available.",
       sourceName: "TrendForce",
       sourceTier: "tier_1",
       sourceUrl: "https://www.trendforce.com/",
@@ -233,5 +231,5 @@ export const mockDashboardData: DashboardData = {
     },
   ],
   footerNote:
-    "Phase 6K prototype. Earnings Mode adds deterministic pre-earnings checks, persisted post-earnings inputs, normalized earnings evidence, and a manual review summary without trading instructions.",
+    "Local-first thesis monitoring with deterministic scores and review labels. Optional AI remains explanation-only. Not financial advice.",
 };

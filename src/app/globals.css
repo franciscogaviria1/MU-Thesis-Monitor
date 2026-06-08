@@ -26,6 +26,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
   background:
     linear-gradient(rgba(24, 26, 29, 0.025) 1px, transparent 1px),
     var(--paper);
@@ -41,6 +42,23 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+p,
+li,
+dd,
+td,
+th,
+strong,
+span {
+  overflow-wrap: anywhere;
+}
+
+.dashboard-shell > *,
+.score-grid > *,
+.memory-data-layout > *,
+.earnings-layout > * {
+  min-width: 0;
 }
 
 button:focus-visible,
@@ -2477,6 +2495,13 @@ footer {
 
   .dashboard-shell {
     width: min(100% - 2rem, 1440px);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    min-height: 2.75rem;
   }
 
   .section-heading {

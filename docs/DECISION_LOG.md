@@ -1,5 +1,15 @@
 # Decision Log
 
+## 2026-06-08: Production Hardening and Reliability Polish
+
+- **Decision:** Keep application behavior and deterministic policy unchanged while hardening optional provider, persistence, and server-action failure paths for daily local use.
+- **Environment:** Document all optional keys in `.env.example`; provider secrets remain server-only and must never use `NEXT_PUBLIC_`.
+- **Persistence:** Continue using ignored local SQLite files with non-destructive localStorage migration. Server-action or database failures preserve current session data and return visible unavailable states.
+- **Usability:** Remove stale phase copy, use a generated dashboard timestamp, and preserve the existing layout with small-screen wrapping and touch-target improvements.
+- **Audit:** Remove dead UI code and expected provider console warnings. The final smoke checklist covers market, AI, manual memory, earnings, and restart behavior.
+- **Safety boundary:** Scoring rules, decision rules, evidence ingestion semantics, and AI capabilities are unchanged.
+- **Author:** Codex
+
 ## 2026-06-07: Deterministic Earnings Mode v1
 
 - **Decision:** Add a pre- and post-earnings workflow using a manually configured earnings date and structured user input.

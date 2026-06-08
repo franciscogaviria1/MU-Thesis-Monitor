@@ -108,7 +108,19 @@ export function MemoryEvidenceWorkspace({
         nextStorageAvailable = false;
       }
 
-      const persistentState = await loadPersistentDashboardState();
+      let persistentState;
+      try {
+        persistentState = await loadPersistentDashboardState();
+      } catch {
+        persistentState = {
+          status: unavailablePersistenceStatus(
+            "Local persistence could not be reached. Existing browser data remains available.",
+          ),
+          manualEntries: [],
+          earningsRecords: [],
+          decisionHistory: [],
+        };
+      }
       const mergedEntries = mergeManualMemoryEntries(
         persistentState.manualEntries,
         localEntries,
@@ -124,8 +136,14 @@ export function MemoryEvidenceWorkspace({
       setPersistenceReady(true);
 
       if (localEntries.length > 0 && persistentState.status.available) {
-        const migrationStatus =
-          await importManualMemoryEntries(localEntries);
+        let migrationStatus: PersistenceStatus;
+        try {
+          migrationStatus = await importManualMemoryEntries(localEntries);
+        } catch {
+          migrationStatus = unavailablePersistenceStatus(
+            "Browser entries remain intact, but their SQLite import could not be completed.",
+          );
+        }
         if (!cancelled) {
           setPersistenceStatus(migrationStatus);
         }
@@ -202,14 +220,26 @@ export function MemoryEvidenceWorkspace({
     let cancelled = false;
 
     async function saveSnapshot() {
-      const result = await persistDailyDashboardSnapshot({
-        createdAt: calculatedAt,
-        scores,
-        decision,
-        evidence: evidenceItems,
-        audit,
-        manualEntries: entries,
-      });
+      let result;
+      try {
+        result = await persistDailyDashboardSnapshot({
+          createdAt: calculatedAt,
+          scores,
+          decision,
+          evidence: evidenceItems,
+          audit,
+          manualEntries: entries,
+        });
+      } catch {
+        if (!cancelled) {
+          setPersistenceStatus(
+            unavailablePersistenceStatus(
+              "The daily snapshot could not be saved. The current dashboard remains available.",
+            ),
+          );
+        }
+        return;
+      }
 
       if (!cancelled) {
         setPersistenceStatus(result.status);
@@ -251,7 +281,14 @@ export function MemoryEvidenceWorkspace({
       setStorageAvailable(false);
     }
 
-    const status = await persistManualMemoryEntry(entry);
+    let status: PersistenceStatus;
+    try {
+      status = await persistManualMemoryEntry(entry);
+    } catch {
+      status = unavailablePersistenceStatus(
+        "SQLite persistence could not be reached.",
+      );
+    }
     setPersistenceStatus(status);
 
     return {
@@ -277,7 +314,14 @@ export function MemoryEvidenceWorkspace({
       ),
     );
 
-    const status = await persistEarningsRecord(record);
+    let status: PersistenceStatus;
+    try {
+      status = await persistEarningsRecord(record);
+    } catch {
+      status = unavailablePersistenceStatus(
+        "SQLite persistence could not be reached.",
+      );
+    }
     setPersistenceStatus(status);
 
     return status.available
@@ -368,4 +412,11 @@ function scoreKey(areaId: string) {
     default:
       throw new Error(`Unsupported score area: ${areaId}`);
   }
+}
+
+function unavailablePersistenceStatus(message: string): PersistenceStatus {
+  return {
+    available: false,
+    message,
+  };
 }

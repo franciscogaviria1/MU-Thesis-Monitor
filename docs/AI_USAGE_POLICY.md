@@ -67,7 +67,9 @@ Cache invalidation must occur when evidence, policy, prompt, or required output 
 ## Dashboard Explanation Layer
 
 - Explanation requests are server-only and user-initiated; page loads must not call AI.
+- `OPENAI_API_KEY` must never use a `NEXT_PUBLIC_` prefix, enter client props, or appear in browser logs.
 - Inputs are limited to deterministic results, their reasons and warnings, and a small set of relevant evidence summaries.
 - Outputs must match the explanation JSON schema and must not contain replacement scores, confidence values, or decision labels.
 - Missing credentials, provider failures, refusals, incomplete responses, and invalid JSON leave the deterministic dashboard unchanged.
+- Expected provider failures return a human-readable unavailable state and do not require console error or warning output.
 - The client may cache the latest response for an unchanged dashboard snapshot, but AI output remains separate from source evidence and scoring.
